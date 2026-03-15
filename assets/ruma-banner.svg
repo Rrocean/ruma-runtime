@@ -1,0 +1,54 @@
+<svg width="1280" height="640" viewBox="0 0 1280 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="640" rx="32" fill="#0C111D"/>
+  <rect x="32" y="32" width="1216" height="576" rx="24" fill="url(#paint0_linear)"/>
+  <g opacity="0.16">
+    <path d="M80 128H1200" stroke="#E5E7EB" stroke-width="2"/>
+    <path d="M80 208H1200" stroke="#E5E7EB" stroke-width="2"/>
+    <path d="M80 288H1200" stroke="#E5E7EB" stroke-width="2"/>
+    <path d="M80 368H1200" stroke="#E5E7EB" stroke-width="2"/>
+    <path d="M80 448H1200" stroke="#E5E7EB" stroke-width="2"/>
+    <path d="M80 528H1200" stroke="#E5E7EB" stroke-width="2"/>
+    <path d="M240 96V560" stroke="#E5E7EB" stroke-width="2"/>
+    <path d="M400 96V560" stroke="#E5E7EB" stroke-width="2"/>
+    <path d="M560 96V560" stroke="#E5E7EB" stroke-width="2"/>
+    <path d="M720 96V560" stroke="#E5E7EB" stroke-width="2"/>
+    <path d="M880 96V560" stroke="#E5E7EB" stroke-width="2"/>
+    <path d="M1040 96V560" stroke="#E5E7EB" stroke-width="2"/>
+  </g>
+  <rect x="92" y="92" width="174" height="40" rx="20" fill="#111827"/>
+  <text x="120" y="118" fill="#F9FAFB" font-size="18" font-family="Segoe UI, Arial, sans-serif" font-weight="700">RuMa Runtime</text>
+  <text x="92" y="210" fill="#F9FAFB" font-size="68" font-family="Segoe UI, Arial, sans-serif" font-weight="800">Evidence-first runtime</text>
+  <text x="92" y="284" fill="#F9FAFB" font-size="68" font-family="Segoe UI, Arial, sans-serif" font-weight="800">for coding agents</text>
+  <text x="96" y="352" fill="#D1D5DB" font-size="24" font-family="Segoe UI, Arial, sans-serif">RuMa = pressure overlay. Diagnose, recover, ship, and audit</text>
+  <text x="96" y="390" fill="#D1D5DB" font-size="24" font-family="Segoe UI, Arial, sans-serif">for Codex, Claude Code, and OpenClaw with real installers.</text>
+
+  <rect x="96" y="446" width="180" height="52" rx="16" fill="#F97316"/>
+  <text x="132" y="478" fill="#111827" font-size="22" font-family="Segoe UI, Arial, sans-serif" font-weight="800">Diagnose</text>
+  <rect x="292" y="446" width="180" height="52" rx="16" fill="#10B981"/>
+  <text x="336" y="478" fill="#06281E" font-size="22" font-family="Segoe UI, Arial, sans-serif" font-weight="800">Recover</text>
+  <rect x="488" y="446" width="180" height="52" rx="16" fill="#38BDF8"/>
+  <text x="550" y="478" fill="#082F49" font-size="22" font-family="Segoe UI, Arial, sans-serif" font-weight="800">Ship</text>
+  <rect x="684" y="446" width="180" height="52" rx="16" fill="#FACC15"/>
+  <text x="746" y="478" fill="#422006" font-size="22" font-family="Segoe UI, Arial, sans-serif" font-weight="800">Audit</text>
+
+  <rect x="820" y="146" width="340" height="120" rx="24" fill="#111827" fill-opacity="0.88" stroke="#334155"/>
+  <text x="850" y="184" fill="#F9FAFB" font-size="18" font-family="Segoe UI, Arial, sans-serif" font-weight="700">Clients</text>
+  <text x="850" y="220" fill="#D1D5DB" font-size="24" font-family="Segoe UI, Arial, sans-serif">Codex</text>
+  <text x="974" y="220" fill="#D1D5DB" font-size="24" font-family="Segoe UI, Arial, sans-serif">Claude Code</text>
+  <text x="850" y="252" fill="#D1D5DB" font-size="24" font-family="Segoe UI, Arial, sans-serif">OpenClaw</text>
+
+  <rect x="820" y="290" width="340" height="198" rx="24" fill="#111827" fill-opacity="0.88" stroke="#334155"/>
+  <text x="850" y="328" fill="#F9FAFB" font-size="18" font-family="Segoe UI, Arial, sans-serif" font-weight="700">Overlays</text>
+  <text x="850" y="366" fill="#D1D5DB" font-size="22" font-family="Segoe UI, Arial, sans-serif">Neutral</text>
+  <text x="850" y="400" fill="#D1D5DB" font-size="22" font-family="Segoe UI, Arial, sans-serif">High Agency</text>
+  <text x="850" y="434" fill="#D1D5DB" font-size="22" font-family="Segoe UI, Arial, sans-serif">Hardline</text>
+  <text x="850" y="468" fill="#D1D5DB" font-size="22" font-family="Segoe UI, Arial, sans-serif">RuMa / PUA</text>
+
+  <defs>
+    <linearGradient id="paint0_linear" x1="64" y1="64" x2="1216" y2="576" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1F2937"/>
+      <stop offset="0.5" stop-color="#111827"/>
+      <stop offset="1" stop-color="#172554"/>
+    </linearGradient>
+  </defs>
+</svg>
