@@ -1,7 +1,8 @@
 import { expect, test } from "@playwright/test";
+import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync } from "node:fs";
 import { resolve } from "node:path";
-import { adapterSnippets, benchmarks, categories, flavors, modes } from "../src/data/library.js";
+import { adapterSnippets, benchmarks, categories, flavors, modes, workflowMatrix } from "../src/data/library.js";
 import {
   installAgentSkill,
   installAllAgentSkills,
@@ -79,6 +80,40 @@ test("filters by category, flavor and adapter", async ({ page }) => {
   expect(copied).toContain("进入 Hardline");
 });
 
+test("locale toggle re-renders the shell in English and back to Chinese", async ({ page }) => {
+  await page.locator('[data-locale="en"]').click();
+  await expect(page.locator("text=Interface language")).toBeVisible();
+  await expect(page.locator("text=Quick Compose")).toBeVisible();
+  await expect(page.locator("#previewSummary")).toContainText("Best for");
+
+  await page.locator('[data-locale="zh"]').click();
+  await expect(page.locator("text=界面语言")).toBeVisible();
+  await expect(page.locator("text=快速组合")).toBeVisible();
+  await expect(page.locator("#previewSummary")).toContainText("适合");
+});
+
+test("quick composer syncs mode and flavor into the live prompt", async ({ page }) => {
+  await page.selectOption("#composerModeSelect", "ship");
+  await page.selectOption("#composerFlavorSelect", "pua");
+
+  await expect(page.locator("#previewTitle")).toContainText("Ship Checklist / PUA Overlay");
+  await expect(page.locator("#composerCommand")).toContainText("node ./bin/ruma-runtime.mjs compose ship pua");
+
+  await page.locator("#copyComposerButton").click();
+  const copied = await page.evaluate(() => window.__copied.at(-1));
+  expect(copied).toContain("没有穷尽方案之前，禁止说做不到");
+});
+
+test("workflow matrix exposes all core combinations and updates selection", async ({ page }) => {
+  await expect(page.locator(".matrix-card")).toHaveCount(workflowMatrix.length);
+  await page.locator('[data-matrix-mode="audit"][data-matrix-flavor="hardline"]').click();
+
+  await expect(page.locator("#previewTitle")).toContainText("Platform Audit / Hardline");
+  await expect(page.locator('[data-matrix-mode="audit"][data-matrix-flavor="hardline"]')).toHaveClass(
+    /matrix-card-active/
+  );
+});
+
 test("mobile viewport keeps controls usable", async ({ page, isMobile }) => {
   test.skip(!isMobile, "mobile-only check");
   await page.locator("#searchInput").fill("json");
@@ -86,6 +121,36 @@ test("mobile viewport keeps controls usable", async ({ page, isMobile }) => {
   await page.locator(`[data-flavor="neutral"]`).click();
   await page.locator(`[data-mode="json-format"]`).click();
   await expect(page.locator("#modalTitle")).toHaveText("JSON Strict");
+});
+
+test("cli surfaces merged ruma-pro capabilities", async ({ isMobile }) => {
+  test.skip(isMobile, "run once on desktop project");
+
+  const listResult = spawnSync("node", ["./bin/ruma-runtime.mjs", "list"], {
+    cwd: process.cwd(),
+    encoding: "utf8",
+    shell: true
+  });
+  expect(listResult.status).toBe(0);
+  expect(listResult.stdout).toContain("Flavors:");
+  expect(listResult.stdout).toContain("diagnose");
+
+  const matrixResult = spawnSync("node", ["./bin/ruma-runtime.mjs", "matrix"], {
+    cwd: process.cwd(),
+    encoding: "utf8",
+    shell: true
+  });
+  expect(matrixResult.status).toBe(0);
+  expect(matrixResult.stdout).toContain("ship + pua");
+
+  const composeResult = spawnSync("node", ["./bin/ruma-runtime.mjs", "compose", "recover", "high-agency"], {
+    cwd: process.cwd(),
+    encoding: "utf8",
+    shell: true
+  });
+  expect(composeResult.status).toBe(0);
+  expect(composeResult.stdout).toContain("Recovery Protocol");
+  expect(composeResult.stdout).toContain("端到端交付结果");
 });
 
 test("category metadata stays in sync", async ({ page }) => {

@@ -3,10 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "bin": {
+    "ruma-runtime": "./bin/ruma-runtime.mjs"
+  },
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 4173",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1 --port 4173",
+    "cli:list": "node ./bin/ruma-runtime.mjs list",
+    "cli:matrix": "node ./bin/ruma-runtime.mjs matrix",
+    "cli:random": "node ./bin/ruma-runtime.mjs random",
     "install:runtime:codex": "node ./scripts/install-codex-skill.mjs",
     "install:runtime:claude": "node ./scripts/install-agent-skill.mjs claude ruma-runtime",
     "install:runtime:openclaw": "node ./scripts/install-agent-skill.mjs openclaw ruma-runtime",

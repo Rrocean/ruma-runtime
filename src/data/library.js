@@ -625,3 +625,24 @@ export const benchmarks = [
     outcome: "结果：会话从低效内耗变成稳定收敛，用户看到的是恢复路径而不是情绪波动。"
   }
 ];
+
+const coreWorkflowIds = new Set(["diagnose", "recover", "ship", "audit"]);
+
+export const buildPrompt = (mode, flavor) =>
+  `${flavor.intro}\n\n${mode.prompt}\n\n## 交付契约\n${mode.outputContract}\n\n${flavor.outro}`;
+
+export const getModeById = (modeId) => modes.find((mode) => mode.id === modeId);
+
+export const getFlavorById = (flavorId) => flavors.find((flavor) => flavor.id === flavorId);
+
+export const coreWorkflowModes = modes.filter((mode) => coreWorkflowIds.has(mode.id));
+
+export const workflowMatrix = coreWorkflowModes.flatMap((mode) =>
+  flavors.map((flavor) => ({
+    id: `${mode.id}:${flavor.id}`,
+    modeId: mode.id,
+    flavorId: flavor.id,
+    title: `${mode.title} / ${flavor.name}`,
+    summary: `${mode.summary} + ${flavor.strapline}`
+  }))
+);

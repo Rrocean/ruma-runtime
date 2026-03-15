@@ -40,6 +40,7 @@
 - 四个风格层：`neutral`、`high-agency`、`hardline`、`RuMa / PUA`
 - 三端安装：`Codex`、`Claude Code`、`OpenClaw`
 - 独立的 `pua` skill 包：主 `SKILL.md` + references + `/pua` prompt 入口
+- `ruma-pro` 风格的组合层：Quick Compose、16 格核心矩阵、命令行入口
 - 一个可浏览模式库的 Web 门面
 - `Playwright` 冒烟测试和本地 autopilot loop
 
@@ -158,11 +159,26 @@ npm run check
 当前冒烟覆盖包括：
 
 - 模式卡片和 modal 全量点击
+- Quick Compose 下拉组合与复制
+- 核心 workflow 16 宫格切换
 - flavor / adapter 切换
 - benchmark 展示
 - 移动端布局
 - `Codex / Claude Code / OpenClaw` 安装脚本复制行为
 - `pua` skill 的 references、agents 元数据和 prompt 同步行为
+
+## CLI
+
+```bash
+npm run cli:list
+npm run cli:matrix
+npm run cli:random
+node ./bin/ruma-runtime.mjs compose ship hardline
+node ./bin/ruma-runtime.mjs install pua codex
+node ./bin/ruma-runtime.mjs qa
+```
+
+这个层是把桌面 `ruma-pro` 里真正有用的产品能力并进当前仓库：不用开页面也能快速列模式、看 4 x 4 核心矩阵、随机抽组合或直接生成 prompt。
 
 ## 自主巡检
 
