@@ -1,0 +1,26 @@
+{
+  "name": "ruma-runtime",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 4173",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 4173",
+    "install:codex": "node ./scripts/install-codex-skill.mjs",
+    "install:claude": "node ./scripts/install-agent-skill.mjs claude",
+    "install:openclaw": "node ./scripts/install-agent-skill.mjs openclaw",
+    "install:all": "node ./scripts/install-agent-skill.mjs all",
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "check": "npm run build && npm run test",
+    "qa:loop": "node ./scripts/qa-loop.mjs",
+    "autopilot:once": "powershell -ExecutionPolicy Bypass -File ./scripts/autopilot-once.ps1",
+    "autopilot:loop": "powershell -ExecutionPolicy Bypass -File ./scripts/autopilot-loop.ps1",
+    "autopilot:register": "powershell -ExecutionPolicy Bypass -File ./scripts/register-autopilot-task.ps1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.54.1",
+    "vite": "^7.1.7"
+  }
+}
