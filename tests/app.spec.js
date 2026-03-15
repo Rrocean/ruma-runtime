@@ -1,8 +1,13 @@
 import { expect, test } from "@playwright/test";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { adapterSnippets, benchmarks, categories, flavors, modes } from "../src/data/library.js";
-import { installAgentSkill, installAllAgentSkills } from "../scripts/install-agent-skill.mjs";
+import {
+  installAgentSkill,
+  installAllAgentSkills,
+  installAllForBundle,
+  installSkillBundle
+} from "../scripts/install-agent-skill.mjs";
 import { installCodexSkill } from "../scripts/install-codex-skill.mjs";
 
 test.beforeEach(async ({ page }) => {
@@ -115,6 +120,17 @@ test("renders dedicated benchmark comparisons with before and after behaviors", 
   }
 });
 
+test("writes smoke screenshots into automation reports", async ({ page }, testInfo) => {
+  const screenshotDir = resolve(process.cwd(), "automation", "reports", "screenshots");
+  const screenshotPath = resolve(screenshotDir, `${testInfo.project.name}-home.png`);
+
+  mkdirSync(screenshotDir, { recursive: true });
+  await page.screenshot({ path: screenshotPath, fullPage: true });
+
+  expect(existsSync(screenshotPath)).toBeTruthy();
+  expect(statSync(screenshotPath).size).toBeGreaterThan(0);
+});
+
 test("codex install script copies the local skill into CODEX_HOME", async () => {
   const tempRoot = resolve(process.cwd(), "test-results");
   mkdirSync(tempRoot, { recursive: true });
@@ -188,6 +204,65 @@ test("install all copies every supported client artifact", async () => {
     expect(existsSync(resolve(codexHome, "prompts", "ruma-runtime.md"))).toBeTruthy();
     expect(existsSync(resolve(claudeHome, "skills", "ruma-runtime", "SKILL.md"))).toBeTruthy();
     expect(existsSync(resolve(openclawHome, "skills", "ruma-runtime", "SKILL.md"))).toBeTruthy();
+  } finally {
+    rmSync(codexHome, { recursive: true, force: true });
+    rmSync(claudeHome, { recursive: true, force: true });
+    rmSync(openclawHome, { recursive: true, force: true });
+  }
+});
+
+test("pua installer copies the recursive skill bundle and prompt into Codex", async () => {
+  const tempRoot = resolve(process.cwd(), "test-results");
+  mkdirSync(tempRoot, { recursive: true });
+
+  const codexHome = mkdtempSync(resolve(tempRoot, "codex-pua-"));
+
+  try {
+    installSkillBundle({ bundle: "pua", target: "codex", home: codexHome, logger: () => {} });
+
+    const installedSkill = resolve(codexHome, "skills", "pua", "SKILL.md");
+    const installedPrompt = resolve(codexHome, "prompts", "pua.md");
+    const installedReference = resolve(codexHome, "skills", "pua", "references", "execution-protocol.md");
+    const installedAgentMeta = resolve(codexHome, "skills", "pua", "agents", "openai.yaml");
+
+    expect(existsSync(installedSkill)).toBeTruthy();
+    expect(existsSync(installedPrompt)).toBeTruthy();
+    expect(existsSync(installedReference)).toBeTruthy();
+    expect(existsSync(installedAgentMeta)).toBeTruthy();
+    expect(readFileSync(installedSkill, "utf8")).toBe(
+      readFileSync(resolve(process.cwd(), "skills", "pua", "SKILL.md"), "utf8")
+    );
+    expect(readFileSync(installedPrompt, "utf8")).toBe(
+      readFileSync(resolve(process.cwd(), "commands", "pua.md"), "utf8")
+    );
+  } finally {
+    rmSync(codexHome, { recursive: true, force: true });
+  }
+});
+
+test("installing the pua bundle to all clients preserves references", async () => {
+  const tempRoot = resolve(process.cwd(), "test-results");
+  mkdirSync(tempRoot, { recursive: true });
+
+  const codexHome = mkdtempSync(resolve(tempRoot, "codex-pua-all-"));
+  const claudeHome = mkdtempSync(resolve(tempRoot, "claude-pua-all-"));
+  const openclawHome = mkdtempSync(resolve(tempRoot, "openclaw-pua-all-"));
+
+  try {
+    installAllForBundle({
+      bundle: "pua",
+      homes: {
+        codex: codexHome,
+        claude: claudeHome,
+        openclaw: openclawHome
+      },
+      logger: () => {}
+    });
+
+    expect(existsSync(resolve(codexHome, "skills", "pua", "references", "failure-patterns.md"))).toBeTruthy();
+    expect(existsSync(resolve(codexHome, "prompts", "pua.md"))).toBeTruthy();
+    expect(existsSync(resolve(claudeHome, "skills", "pua", "references", "execution-protocol.md"))).toBeTruthy();
+    expect(existsSync(resolve(openclawHome, "skills", "pua", "references", "human-simulation.md"))).toBeTruthy();
   } finally {
     rmSync(codexHome, { recursive: true, force: true });
     rmSync(claudeHome, { recursive: true, force: true });

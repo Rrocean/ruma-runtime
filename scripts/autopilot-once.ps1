@@ -130,8 +130,22 @@ try {
     Invoke-Step -Label "npm install" -Command "npm install"
   }
 
+  $runtimeInstallOk = $true
+  $puaInstallOk = $true
   $buildOk = $true
   $testOk = $true
+
+  try {
+    Invoke-Step -Label "install runtime skills" -Command "npm run install:all"
+  } catch {
+    $runtimeInstallOk = $false
+  }
+
+  try {
+    Invoke-Step -Label "install pua skills" -Command "npm run install:pua:all"
+  } catch {
+    $puaInstallOk = $false
+  }
 
   try {
     Invoke-Step -Label "build" -Command "npm run build"
@@ -146,14 +160,14 @@ try {
   }
 
   $codex = Get-Command codex -ErrorAction SilentlyContinue
-  $canImprove = $codex -and $buildOk -and $testOk -and (Test-Path $backlogPath)
+  $canImprove = $codex -and $runtimeInstallOk -and $puaInstallOk -and $buildOk -and $testOk -and (Test-Path $backlogPath)
 
   if ($canImprove) {
     $lastMessage = Join-Path $reportsDir "codex-last-$timestamp.txt"
     $prompt = @"
 You are the RuMa Runtime autopilot.
 
-Work ONLY inside this workspace. Read automation/backlog.md and choose the single highest-value pending item that can be completed safely in one pass.
+Work ONLY inside this workspace. Read skills/pua/SKILL.md and use it as the pressure-and-verification protocol. Then read automation/backlog.md and choose the single highest-value pending item that can be completed safely in one pass.
 
 Rules:
 1. Make one bounded improvement only.
@@ -170,7 +184,7 @@ Rules:
       "## codex exec`n`nSkipped or failed: $($_.Exception.Message)`n" | Out-File -FilePath $reportFile -Append -Encoding utf8
     }
   } else {
-    "## codex exec`n`nSkipped. buildOk=$buildOk testOk=$testOk codexPresent=$([bool]$codex)`n" | Out-File -FilePath $reportFile -Append -Encoding utf8
+    "## codex exec`n`nSkipped. runtimeInstallOk=$runtimeInstallOk puaInstallOk=$puaInstallOk buildOk=$buildOk testOk=$testOk codexPresent=$([bool]$codex)`n" | Out-File -FilePath $reportFile -Append -Encoding utf8
   }
 } finally {
   if ($lockAcquired -and (Test-Path $lockDir)) {

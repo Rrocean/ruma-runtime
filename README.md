@@ -39,6 +39,7 @@
 - 四个运行模式：`diagnose`、`recover`、`ship`、`audit`
 - 四个风格层：`neutral`、`high-agency`、`hardline`、`RuMa / PUA`
 - 三端安装：`Codex`、`Claude Code`、`OpenClaw`
+- 独立的 `pua` skill 包：主 `SKILL.md` + references + `/pua` prompt 入口
 - 一个可浏览模式库的 Web 门面
 - `Playwright` 冒烟测试和本地 autopilot loop
 
@@ -46,9 +47,9 @@
 
 | Client | 安装结果 | 入口文件 |
 | --- | --- | --- |
-| Codex | skill + prompt | `adapters/codex/ruma-runtime/SKILL.md` + `commands/ruma-runtime.md` |
-| Claude Code | skill | `adapters/claude/ruma-runtime/SKILL.md` |
-| OpenClaw | skill | `adapters/openclaw/ruma-runtime/SKILL.md` |
+| Codex | `ruma-runtime` + `pua` skill + prompt | `adapters/codex/ruma-runtime/SKILL.md` + `skills/pua/` + `commands/*.md` |
+| Claude Code | `ruma-runtime` + `pua` skill | `adapters/claude/ruma-runtime/SKILL.md` + `skills/pua/` |
+| OpenClaw | `ruma-runtime` + `pua` skill | `adapters/openclaw/ruma-runtime/SKILL.md` + `skills/pua/` |
 
 ## 安装
 
@@ -57,6 +58,7 @@
 ```bash
 npm install
 npm run install:all
+npm run install:pua:all
 ```
 
 也可以分客户端安装：
@@ -65,6 +67,9 @@ npm run install:all
 npm run install:codex
 npm run install:claude
 npm run install:openclaw
+npm run install:pua:codex
+npm run install:pua:claude
+npm run install:pua:openclaw
 ```
 
 ### 2. 手动安装
@@ -115,7 +120,13 @@ adapters/
   openclaw/ruma-runtime/SKILL.md
   cursor/ruma-runtime.mdc
 commands/
+  pua.md
   ruma-runtime.md
+skills/
+  pua/
+    SKILL.md
+    references/
+    agents/openai.yaml
 references/
   runtime-playbook.md
   failure-patterns.md
@@ -151,6 +162,7 @@ npm run check
 - benchmark 展示
 - 移动端布局
 - `Codex / Claude Code / OpenClaw` 安装脚本复制行为
+- `pua` skill 的 references、agents 元数据和 prompt 同步行为
 
 ## 自主巡检
 
@@ -163,6 +175,7 @@ npm run qa:loop
 autopilot 会：
 
 - 跑 `build + Playwright smoke`
+- 跑 `runtime + pua` 安装同步
 - 写报告到 `automation/reports`
 - 在本机 `codex` CLI 可用时，从 backlog 挑一个边界清晰的改进项
 

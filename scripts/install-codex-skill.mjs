@@ -4,6 +4,7 @@ import { installAgentSkill } from "./install-agent-skill.mjs";
 
 export const installCodexSkill = ({ codexHome, logger = console.log } = {}) =>
   installAgentSkill({
+    bundle: "ruma-runtime",
     target: "codex",
     home: codexHome,
     logger

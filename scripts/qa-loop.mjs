@@ -19,6 +19,8 @@ const run = (command, args) =>
   });
 
 const steps = [
+  { label: "install runtime skills", command: "npm", args: ["run", "install:all"] },
+  { label: "install pua skills", command: "npm", args: ["run", "install:pua:all"] },
   { label: "build", command: "npm", args: ["run", "build"] },
   { label: "test", command: "npm", args: ["run", "test"] }
 ];

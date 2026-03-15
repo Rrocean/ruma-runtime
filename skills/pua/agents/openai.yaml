@@ -1,0 +1,7 @@
+interface:
+  display_name: "PUA Execution Pack"
+  short_description: "Pressure-first recovery and verification skill."
+  default_prompt: "Use $pua to push a stalled coding agent into evidence-first execution."
+
+policy:
+  allow_implicit_invocation: true

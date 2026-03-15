@@ -517,25 +517,31 @@ export const adapterSnippets = [
   {
     id: "codex",
     name: "Codex",
-    description: "把 runtime skill 和 prompt 安装进本地 Codex。",
-    install: `npm run install:codex`,
-    runtime: `npm install
+    description: "把 runtime 和 pua 两套 skill 一起安装进本地 Codex。",
+    install: `npm run install:codex
+npm run install:pua:codex`,
+    runtime: `/ruma-runtime
+/pua
+npm install
 npm run dev
 npm run check`
   },
   {
     id: "claude",
     name: "Claude Code",
-    description: "用同一套运行协议安装到 Claude Code 的 skills 目录。",
-    install: `npm run install:claude`,
-    runtime: `在 Claude Code 里显式调用 ruma-runtime，或在卡壳 / 自检 / 验证场景自动触发`
+    description: "把 runtime 和 pua 同步到 Claude Code 的 skills 目录。",
+    install: `npm run install:claude
+npm run install:pua:claude`,
+    runtime: `在 Claude Code 里显式调用 ruma-runtime 或 pua
+在卡壳 / 自检 / 验证场景自动触发`
   },
   {
     id: "openclaw",
     name: "OpenClaw",
-    description: "按本机 OpenClaw 的 skills 目录约定直接安装。",
-    install: `npm run install:openclaw`,
-    runtime: `启动 OpenClaw 后在失败恢复、交付验证、环境审计场景调用 ruma-runtime`
+    description: "按 OpenClaw 的 skills 目录约定直接同步 runtime 和 pua。",
+    install: `npm run install:openclaw
+npm run install:pua:openclaw`,
+    runtime: `启动 OpenClaw 后在失败恢复、交付验证、环境审计场景调用 ruma-runtime 或 pua`
   },
   {
     id: "cursor",
@@ -548,9 +554,10 @@ cp adapters/cursor/ruma-runtime.mdc .cursor/rules/ruma-runtime.mdc`,
   {
     id: "ops",
     name: "Autopilot",
-    description: "本地五分钟巡检、自测、自写报告。",
+    description: "本地五分钟巡检、自测、自装 skill、自写报告。",
     install: `npm install
 npx playwright install chromium
+npm run install:pua:all
 npm run autopilot:register`,
     runtime: `powershell -ExecutionPolicy Bypass -File ./scripts/autopilot-loop.ps1`
   }
@@ -564,7 +571,8 @@ export const qaChecks = [
   "Flavor 切换会改变生成 prompt",
   "安装标签切换正确显示片段",
   "Esc 和遮罩点击可关闭 modal",
-  "Codex / Claude Code / OpenClaw 安装脚本复制到正确目录"
+  "Codex / Claude Code / OpenClaw 安装脚本复制到正确目录",
+  "pua skill 的 references、agents 元数据和 prompt 会随安装一并同步"
 ];
 
 export const benchmarks = [
